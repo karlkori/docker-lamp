@@ -1,0 +1,9 @@
+web:
+  build: ./docker/.
+  ports:
+    - '80:80'
+    - '3306:3306'
+  volumes:
+    - ./mysql:/var/lib/mysql
+    - ./app:/var/www/html
+    - ./logs:/var/www/logs
