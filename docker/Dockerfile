@@ -26,7 +26,9 @@ RUN apt-get update && \
 
 RUN	echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
+# Clear unnecessary data
 RUN apt-get clean
+RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # It is need for mc
 RUN export TERM=xterm
