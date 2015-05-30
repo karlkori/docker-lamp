@@ -1,5 +1,5 @@
 web:
-  build: ./docker/.
+  build: ./docker
   ports:
     - '80:80'
     - '3306:3306'

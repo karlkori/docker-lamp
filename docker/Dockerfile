@@ -4,29 +4,29 @@ MAINTAINER Sergiy Dragunov <rjhdsy@gmail.com>
 # Install packages
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && \
-  	apt-get --assume-yes --quiet install \
-  		supervisor \
-  		git \
-  		mc \
-  		vim \
-  		pwgen \
-      curl \
-      wget \
-      mysql-client \
-  		mysql-server \
-      apache2 \
-      php5 \
-      libapache2-mod-php5 \
-      php5-curl \
-      php5-mysql \
-      php-apc \
-      php5-dev \
-      php5-gd \
-      php5-imagick
+    apt-get --assume-yes --quiet install \
+    supervisor \
+    git \
+    mc \
+    vim \
+    pwgen \
+    curl \
+    wget \
+    mysql-client \
+    mysql-server \
+    apache2 \
+    php5 \
+    libapache2-mod-php5 \
+    php5-curl \
+    php5-mysql \
+    php-apc \
+    php5-dev \
+    php5-gd \
+    php5-imagick
 
-RUN	echo "ServerName localhost" >> /etc/apache2/apache2.conf
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
 RUN echo 'alias ll="ls -lah --color=auto"' >> /etc/bash.bashrc
-
 
 # It is needed for mc
 ENV TERM=xterm
@@ -47,9 +47,13 @@ RUN rm -rf /var/lib/mysql/*
 ADD create_mysql_admin_user.sh /create_mysql_admin_user.sh
 RUN chmod 755 /*.sh
 
-# config to enable .htaccess
+# Config to enable .htaccess
 ADD vhost.conf /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
+
+# Replace xdebug configuration
+RUN rm -f /etc/php5/mods-available/xdebug.ini
+ADD xdebug.ini /etc/php5/mods-available/xdebug.ini
 
 # Configure some folders
 #RUN mkdir -p /var/www/html/upload
@@ -68,5 +72,7 @@ RUN apt-get clean -y; \
 
 # Add volumes for MySQL 
 VOLUME  ["/etc/mysql", "/var/lib/mysql", "/var/www/html", "/var/www/logs"]
+
 EXPOSE 80 3306
+
 CMD ["/run.sh"]
