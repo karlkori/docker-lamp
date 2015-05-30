@@ -25,11 +25,11 @@ RUN apt-get update && \
       php5-imagick
 
 RUN	echo "ServerName localhost" >> /etc/apache2/apache2.conf
+RUN echo 'alias ll="ls -lah --color=auto"' >> /etc/bash.bashrc
 
-RUN apt-get clean
 
-# It is need for mc
-RUN export TERM=xterm
+# It is needed for mc
+ENV TERM=xterm
 
 # Add image configuration and scripts
 ADD start-apache2.sh /start-apache2.sh
@@ -59,6 +59,12 @@ RUN a2enmod rewrite
 #Enviornment variables to configure php
 ENV PHP_UPLOAD_MAX_FILESIZE 10M
 ENV PHP_POST_MAX_SIZE 10M
+
+# Cleanup
+RUN apt-get clean -y; \
+    apt-get autoclean -y; \
+    apt-get autoremove -y; \
+    rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 # Add volumes for MySQL 
 VOLUME  ["/etc/mysql", "/var/lib/mysql", "/var/www/html", "/var/www/logs"]
